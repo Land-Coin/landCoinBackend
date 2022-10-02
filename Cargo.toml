@@ -1,8 +1,8 @@
 [package]
-name = "sukumaswap-contract"
+name = "landcoin-contract"
 version = "0.1.0"
 edition = "2021"
-authors = ["Dalmas Ogembo <dalmasogembo@gmail.com>"]
+authors = ["timothyAgevi <timothyagevi@gmail.com>"]
 
 [dependencies]
 near-sdk = "4.0.0-pre.7"
