@@ -51,6 +51,7 @@ impl Transaction {
     }
 }
 
+#[near_bindgen]
 impl LandCoin {
     pub fn add_transaction(
         &mut self,

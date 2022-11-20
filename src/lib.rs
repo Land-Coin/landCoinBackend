@@ -19,6 +19,17 @@ pub struct LandCoin {
     pub purposes: UnorderedSet<Purpose>,
 }
 
+impl Default for LandCoin {
+    fn default() -> Self {
+        Self {
+            properties: UnorderedMap::new(b"a"),
+            transactions: UnorderedMap::new(b"b"),
+            categories: UnorderedSet::new(b"c"),
+            purposes: UnorderedSet::new(b"e"),
+        }
+    }
+}
+
 #[near_bindgen]
 impl LandCoin {
     #[init]
@@ -77,7 +88,7 @@ mod tests {
         landcoin.add_category("Land".to_string(), "Acres".to_string());
         landcoin.add_category("Building".to_string(), "Square metres".to_string());
 
-        assert_eq!(landcoin.categories.len(), 2 , "Category not added");
+        assert_eq!(landcoin.categories.len(), 2, "Category not added");
 
         landcoin.add_purpose("Sell".to_string());
         landcoin.add_purpose("Rent".to_string());
@@ -87,12 +98,12 @@ mod tests {
         let purpose = Purpose {
             name: "Sell".to_string(),
         };
-        let mut owners = UnorderedSet::new(b"s");
-        owners.insert(&"dalmasonto.testnet".to_string());
-        owners.insert(&"timo.testnet".to_string());
+        let mut owners = Vec::new();
+        owners.push("dalmasonto.testnet".to_string());
+        owners.push("timo.testnet".to_string());
 
-        let mut owners_update = UnorderedSet::new(b"z");
-        owners_update.insert(&"dalmasonto.testnet".to_string());
+        let mut owners_update = Vec::new();
+        owners_update.push("dalmasonto.testnet".to_string());
 
         let loc = Coords {
             lat: "1.2232".to_string(),

@@ -35,21 +35,21 @@ pub struct Dispute {
     pub message: String,
 }
 
-// #[derive(Serialize, Deserialize, BorshSerialize, BorshDeserialize, Debug)]
-// #[serde(crate = "near_sdk::serde")]
-#[derive(BorshSerialize, BorshDeserialize, Debug)]
+#[derive(Serialize, Deserialize, BorshSerialize, BorshDeserialize, Debug)]
+#[serde(crate = "near_sdk::serde")]
+// #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct Property {
     pub id: String,
     pub category: String,
     pub purpose: Purpose,
     pub size: String,
     pub title_no: String,
-    pub owners: UnorderedSet<String>,
+    pub owners: Vec<String>,
     pub price: String,
     pub location: Coords,
     pub has_caveat: bool,
     pub has_dispute: bool,
-    pub disputes: UnorderedSet<Dispute>,
+    pub disputes: Vec<Dispute>,
 }
 
 impl Property {
@@ -59,7 +59,7 @@ impl Property {
         purpose: Purpose,
         size: String,
         title_no: String,
-        owners: UnorderedSet<String>,
+        owners: Vec<String>,
         price: String,
         location: Coords,
     ) -> Self {
@@ -74,11 +74,11 @@ impl Property {
             location,
             has_caveat: false,
             has_dispute: false,
-            disputes: UnorderedSet::new(b"d".to_vec()),
+            disputes: Vec::new(),
         }
     }
     pub fn add_dispute(&mut self, dispute: Dispute) {
-        self.disputes.insert(&dispute);
+        self.disputes.push(dispute);
     }
 
     pub fn edit_bools(&mut self, has_cav: bool, has_dis: bool) {
@@ -86,7 +86,7 @@ impl Property {
         self.has_dispute = has_dis;
     }
 
-    pub fn edit(&mut self, purpose: Purpose, owners: UnorderedSet<String>, price: String){
+    pub fn edit(&mut self, purpose: Purpose, owners: Vec<String>, price: String){
         self.purpose = purpose;
         self.owners = owners;
         self.price = price
@@ -94,6 +94,7 @@ impl Property {
 }
 
 
+#[near_bindgen]
 impl LandCoin {
     pub fn add_property(
         &mut self,
@@ -102,7 +103,7 @@ impl LandCoin {
         purpose: Purpose,
         size: String,
         title_no: String,
-        owners: UnorderedSet<String>,
+        owners: Vec<String>,
         price: String,
         location: Coords,
     ) -> String {
@@ -122,6 +123,11 @@ impl LandCoin {
 
     pub fn get_property(&mut self, id: String) -> Option<Property> {
         self.properties.get(&id)
+    }
+
+    pub fn search_property(&mut self, query: String) -> Option<Property> {
+        let prop = self.properties.values().into_iter().find(|k| k.id == query || k.title_no == query);
+        return prop;
     }
 
     pub fn pub_get_property(&self, id: String) -> Option<Property> {
@@ -165,7 +171,7 @@ impl LandCoin {
         return "success".to_string();
     }
 
-    pub fn edit_property(&mut self, prop_id: String, purpose: Purpose, owners: UnorderedSet<String>, price: String, )-> String{
+    pub fn edit_property(&mut self, prop_id: String, purpose: Purpose, owners: Vec<String>, price: String, )-> String{
         let mut prop = self.get_property(prop_id.clone());
         if prop.as_ref().is_some() {
             prop.as_mut().unwrap().edit(purpose, owners, price);

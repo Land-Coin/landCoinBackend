@@ -1,0 +1,1 @@
+/home/agevi/LandCoin\ Organization/landCoinBackend/target/wasm32-unknown-unknown/release/landcoin_contract.wasm: /home/agevi/LandCoin\ Organization/landCoinBackend/src/lib.rs /home/agevi/LandCoin\ Organization/landCoinBackend/src/property.rs /home/agevi/LandCoin\ Organization/landCoinBackend/src/transaction.rs
